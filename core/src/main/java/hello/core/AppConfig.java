@@ -31,7 +31,7 @@ public class AppConfig {
 
     @Bean
     public DiscountPolicy discountPolicy() {
-//        return new FIxDiscountPolicy();
+//        return new FixDiscountPolicy();
         return new RateDiscountPolicy();
     }
 }
