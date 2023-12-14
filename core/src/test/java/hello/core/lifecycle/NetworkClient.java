@@ -1,10 +1,9 @@
 package hello.core.lifecycle;
 
-//public class NetworkClient implements InitializingBean, DisposableBean {
-
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 
+//public class NetworkClient implements InitializingBean, DisposableBean {
 public class NetworkClient {
     private String url;
 
