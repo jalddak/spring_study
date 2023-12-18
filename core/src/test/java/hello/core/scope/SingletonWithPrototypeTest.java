@@ -6,6 +6,7 @@ import jakarta.inject.Provider;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,13 +29,16 @@ public class SingletonWithPrototypeTest {
     @Test
     void singletonClientUsePrototype() {
         AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(ClientBean.class, PrototypeBean.class);
+//        ac = new AnnotationConfigApplicationContext(ClientBean.class, PrototypeBean.class, PrototypeBean2.class);
 
         ClientBean clientBean1 = ac.getBean(ClientBean.class);
         int count1 = clientBean1.logic();
+//        assertThat(count1).isEqualTo(1);
         assertThat(count1).isEqualTo(1);
 
         ClientBean clientBean2 = ac.getBean(ClientBean.class);
         int count2 = clientBean2.logic();
+//        assertThat(count2).isEqualTo(1);
         assertThat(count2).isEqualTo(1);
     }
 
@@ -64,6 +68,31 @@ public class SingletonWithPrototypeTest {
 
         public void addCount() {
             count++;
+        }
+
+        public int getCount() {
+            return count;
+        }
+
+        @PostConstruct
+        public void init() {
+            System.out.println("PrototypeBean.init " + this);
+        }
+
+        @PreDestroy
+        public void destroy() {
+            System.out.println("PrototypeBean.destroy");
+        }
+    }
+
+    //임의 작성 코드 내가 궁금한점: @Autowired 우선순위 여기서도 되는건지 궁금해서
+    @Primary
+    @Scope("prototype")
+    static class PrototypeBean2 extends PrototypeBean {
+        private int count = 0;
+
+        public void addCount() {
+            count += 10;
         }
 
         public int getCount() {
