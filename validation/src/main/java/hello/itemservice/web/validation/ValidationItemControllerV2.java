@@ -28,6 +28,7 @@ public class ValidationItemControllerV2 {
 
     @InitBinder
     public void init(WebDataBinder webDataBinder) {
+        log.info("init binder {}", webDataBinder);
         webDataBinder.addValidators(itemValidator);
     }
 
