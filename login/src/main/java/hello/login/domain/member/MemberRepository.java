@@ -12,22 +12,26 @@ public class MemberRepository {
     private static Map<Long, Member> store = new HashMap<>();
     private static long sequence = 0L;
 
-    public Member save(Member member){
+    public Member save(Member member) {
+        if (findByLoginId(member.getLoginId()).isPresent()) {
+            return null;
+        }
+
         member.setId(++sequence);
         log.info("save: member={}", member);
         store.put(member.getId(), member);
         return member;
     }
 
-    public Member findById(Long id){
+    public Member findById(Long id) {
         return store.get(id);
     }
 
-    public List<Member> findAll(){
+    public List<Member> findAll() {
         return new ArrayList<>(store.values());
     }
 
-    public Optional<Member> findByLoginId(String loginId){
+    public Optional<Member> findByLoginId(String loginId) {
 /*
         List<Member> all = findAll();
         for (Member member : all) {
@@ -41,7 +45,7 @@ public class MemberRepository {
                 .findFirst();
     }
 
-    public void clearStore(){
+    public void clearStore() {
         store.clear();
     }
 

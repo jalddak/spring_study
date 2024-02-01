@@ -21,19 +21,23 @@ public class MemberController {
     private final MemberRepository memberRepository;
 
     @GetMapping("/add")
-    public String addForm(@ModelAttribute("member") Member member){
+    public String addForm(@ModelAttribute("member") Member member) {
         return "members/addMemberForm";
     }
 
     @PostMapping("/add")
     public String save(@Valid @ModelAttribute Member member, BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             log.info("bindingResult={}", bindingResult);
             return "members/addMemberForm";
         }
 
-        memberRepository.save(member);
+        if (memberRepository.save(member) == null) {
+            bindingResult.reject("joinFail", "이미 가입된 회원아이디 입니다.");
+            log.info("errors={}", bindingResult);
+            return "members/addMemberForm";
+        }
         return "redirect:/";
     }
 }
